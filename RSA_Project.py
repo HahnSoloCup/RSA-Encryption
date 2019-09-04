@@ -1,3 +1,5 @@
+#TODO: Find out why decryption is cutting off the last character
+
 import random
 import os.path
 from math import gcd
@@ -91,9 +93,12 @@ def Encrypt_File(PUK, PIK, fileName):
             File.close()
         print('\tFile Encrypted Successfully')
     except IOError as e:
-        print('\t' + e)
-    except FileNotFoundError as e:
-        print('\t' + e)
+        print('\tDefault storage location not found. Saving keys in "Files"')
+        with open('Files/Key.txt', "w") as File:
+            File.write("Public Key: " + str(PUK) + "\n")
+            File.write("Private key: " + str(PIK) + "\n")
+            File.close()
+        print('\tFile Encrypted Successfully')
 
 def Decrypt_File(PIK, fileName):
     File = open(fileName, "r")
@@ -108,9 +113,13 @@ def Decrypt_File(PIK, fileName):
             File.write(Encryption_Data[y] + "\n")
         File.close()
         print('\tDecryption Successful')
+        try:
+            os.startfile('Files\\Tester.txt', 'open')
+        except WindowsError as e:
+            print('\tError opening encrypted file')
 
 if __name__ == "__main__":
-    print('RSA Encryption Algorithm [Version 1.0.2]\n')
+    print('RSA Encryption Algorithm [Version 1.0.3]\n')
     while True:
         UI = input(">>").split()
         if UI[0].upper() == 'EXIT':
