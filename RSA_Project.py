@@ -1,5 +1,3 @@
-#TODO: Find out why decryption is cutting off the last character
-
 import random
 import os.path
 from math import gcd
@@ -77,10 +75,10 @@ def Decrypt(Private, Message):
     return Decrypted
 
 def Encrypt_File(PUK, PIK, fileName):
-    File = open(fileName, "r")
+    File = open('Files/' + fileName, "r")
     Encryption_Data = File.readlines()
     File.close()
-    File = open(fileName, "w")
+    File = open('Files/' + fileName, "w")
     File.write(Encrypt(PUK, '********') + "\n")
     for x in range(0,len(Encryption_Data)):
         Encryption_Data[x] = Encrypt(PUK, Encryption_Data[x])
@@ -101,20 +99,20 @@ def Encrypt_File(PUK, PIK, fileName):
         print('\tFile Encrypted Successfully')
 
 def Decrypt_File(PIK, fileName):
-    File = open(fileName, "r")
+    File = open('Files/' + fileName, "r")
     Encryption_Data = File.readlines()
     File.close()
     if not Decrypt(PIK, Encryption_Data[0][:-2]) == '*******':
         print('\tError: Wrong key set')
     else:
-        File = open(fileName, "w")
+        File = open('Files/' + fileName, "w")
         for y in range(1,len(Encryption_Data)):
             Encryption_Data[y] = Decrypt(PIK, Encryption_Data[y][:-2])
             File.write(Encryption_Data[y] + "\n")
         File.close()
         print('\tDecryption Successful')
         try:
-            os.startfile('Files\\Tester.txt', 'open')
+            os.startfile('Files\\' + fileName, 'open')
         except WindowsError as e:
             print('\tError opening encrypted file')
 
@@ -135,7 +133,7 @@ if __name__ == "__main__":
                     D = ModInv(E, ((P-1)*(Q-1)))
                     PIK = D, N
                     myFile.close()
-                    Encrypt_File(PUK, PIK, 'Files/' + UI[1])
+                    Encrypt_File(PUK, PIK, UI[1])
                 except FileNotFoundError:
                     print('\tError: "' + UI[1] + '" does not exist')
             elif len(UI) == 2 and UI[0].upper() == 'DECRYPT':
@@ -144,7 +142,7 @@ if __name__ == "__main__":
                     var1, var2 = input("\tEnter Private Key ('D N'): ").split()
                     PIK = int(var1), int(var2)
                     myFile.close()
-                    Decrypt_File(PIK, 'Files/' + UI[1])
+                    Decrypt_File(PIK, UI[1])
                 except FileNotFoundError:
                     print('\tError: "' + UI[1] + '" does not exist')
             elif len(UI) <= 1 or len(UI) >= 3:
