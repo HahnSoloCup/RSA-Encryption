@@ -1,6 +1,6 @@
 import random
 import os.path
-from math import gcd
+import math
 
 def GenerateRandom(Min, Max):
     Rand = random.randint(Min, Max)
@@ -9,13 +9,9 @@ def GenerateRandom(Min, Max):
         Rand = random.randint(Min, Max)
     return Rand
 
-def GeneratePrimes(n = 300):
-    Original_Primes = set()
-    for i in range(2,n+1):
-        if i not in Original_Primes:
-            yield i
-            Original_Primes.update(range(i*i,n+1,i))
-    return Original_Primes
+def GeneratePrimes():
+    return random.sample([x for x in range(2,100) if not
+     [t for t in range(2,x) if not x%t]], 10)
 
 def GeneratePseudo(Primes, Min, Max):
     Cont = True
@@ -34,7 +30,7 @@ def Public_Key(P, Q):
     PseudoN = ((P-1)*(Q-1))
     while(Cont):
         E = GeneratePseudo(GeneratePrimes(),500,1000)
-        if(gcd(E,PseudoN) == 1):
+        if(math.gcd(E,PseudoN) == 1):
             Cont = False
     PK = (E, N)
     return PK
@@ -126,8 +122,8 @@ if __name__ == "__main__":
             if len(UI) == 2 and UI[0].upper() == 'ENCRYPT':
                 try:
                     myFile = open('Files/' + UI[1])
-                    P = GeneratePseudo(GeneratePrimes(random.randint(0, random.randint(150,300))),0,10000)
-                    Q = GeneratePseudo(GeneratePrimes(random.randint(0, random.randint(150,300))),0,10000)
+                    P = GeneratePseudo(GeneratePrimes(),0,10000)
+                    Q = GeneratePseudo(GeneratePrimes(),0,10000)
                     PUK = Public_Key(P, Q)
                     E, N = PUK
                     D = ModInv(E, ((P-1)*(Q-1)))
